@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video</title>
+</head>
+<body>
+    <h3>canvas태그를 이용한 자막 넣기</h3>
+    <video class="video" src="video.mp4" controls muted loop></video>
+    <div style="display: inline-block;">
+    <div>자막 미리보기</div>
+    <canvas class="canvas" width="600" height="400">이 브라우저는 캔버스를 지원하지 않습니다.</canvas>
+    </div>
+    <script>
+      // 캔버스 다룰 때 기본 세팅, 캔버스콘텍스트 가져오기
+      const canvas = document.querySelector('.canvas');
+      const ctx = canvas.getContext('2d');
+
+      // 폰트 및 색상 세팅
+      ctx.font = 'bold 30px Noto Sans Korean';
+      /// text color
+      ctx.fillStyle = '#fff';
+      ctx.strokeStyle = 'black';
+
+      const videoElem = document.querySelector('.video');
+      videoElem.addEventListener('canplaythrough', render);
+
+      const messages = [
+        {time: 5, message: '자막 1 입니다.', x: 200, y: 370},
+        {time: 7, message: '자막 2 입니다.', x: 200, y: 370},
+        {time: 11, message: '자막 3 입니다.', x: 200, y: 370}
+      ];
+
+      function render() {
+        ctx.drawImage(videoElem, 0, 0, 600, 400);
+        
+        for (var i = 0; i < messages.length; i++) {
+          if (videoElem.currentTime > messages[i].time ) {
+            //console.log(messages[i].time)
+            ctx.fillText(messages[i].message, messages[i].x, messages[i].y);
+            ctx.strokeText(messages[i].message,messages[i].x, messages[i].y);
+          }
+        }
+        
+        requestAnimationFrame(render);
+      }
+    </script>
+</body>
+</html>
